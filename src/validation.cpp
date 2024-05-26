@@ -1694,9 +1694,33 @@ MempoolAcceptResult AcceptToMemoryPool(Chainstate& active_chainstate, const CTra
     const CChainParams& chainparams{active_chainstate.m_chainman.GetParams()};
     assert(active_chainstate.GetMempool() != nullptr);
     CTxMemPool& pool{*active_chainstate.GetMempool()};
+ 
+        
 
     std::vector<COutPoint> coins_to_uncache;
     auto args = MemPoolAccept::ATMPArgs::SingleAccept(chainparams, accept_time, bypass_limits, coins_to_uncache, test_accept);
+        
+        
+    // Check the number of inputs and outputs of the transaction
+     size_t num_inputs = tx->vin.size();
+     size_t num_outputs = tx->vout.size();
+     LogPrintf("ALPHA Transaction %s has %u inputs and %u outputs\n", tx->GetHash().ToString(), num_inputs, num_outputs);
+
+     // You can also add custom checks here if needed
+        if (num_inputs != 1) {
+                LogPrintf("Transaction %s rejected: no inputs\n", tx->GetHash().ToString());
+                TxValidationState state;
+                state.Invalid(TxValidationResult::TX_CONSENSUS, "more that one input");
+                return MempoolAcceptResult::Failure(state);
+            }
+        if (num_outputs != 2) {
+                LogPrintf("Transaction %s rejected: no outputs\n", tx->GetHash().ToString());
+                TxValidationState state;
+                state.Invalid(TxValidationResult::TX_CONSENSUS, "more than 2 outputs");
+                return MempoolAcceptResult::Failure(state);
+            }
+       
+        
     MempoolAcceptResult result = MemPoolAccept(pool, active_chainstate).AcceptSingleTransaction(tx, args);
     if (result.m_result_type != MempoolAcceptResult::ResultType::VALID) {
         // Remove coins that were not present in the coins cache before calling
@@ -1755,8 +1779,10 @@ CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams)
     // Force block reward to zero when right shift is undefined.
     if (halvings >= 64)
         return 0;
-
-    CAmount nSubsidy = 50 * COIN;
+//ALPHA: modifed to divide by 5
+ //   CAmount nSubsidy = 50 * COIN;
+    CAmount nSubsidy = 10 * COIN;
+    
     // Subsidy is cut in half every 210,000 blocks which will occur approximately every 4 years.
     nSubsidy >>= halvings;
     return nSubsidy;
@@ -2456,8 +2482,6 @@ bool Chainstate::ConnectBlock(const CBlock& block, BlockValidationState& state, 
     for (unsigned int i = 0; i < block.vtx.size(); i++)
     {
         const CTransaction &tx = *(block.vtx[i]);
-
-        nInputs += tx.vin.size();
 
         if (!tx.IsCoinBase())
         {
