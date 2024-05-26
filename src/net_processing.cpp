@@ -1990,6 +1990,7 @@ bool PeerManagerImpl::MaybePunishNodeForTx(NodeId nodeid, const TxValidationStat
     case TxValidationResult::TX_NO_MEMPOOL:
     case TxValidationResult::TX_RECONSIDERABLE:
     case TxValidationResult::TX_UNKNOWN:
+    case TxValidationResult::TX_ALPHA_INCOMPATIBLE:
         break;
     }
     return false;
