@@ -1,4 +1,4 @@
-// Copyright (c) 2009-2010 Satoshi Nakamoto
+/ Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2022 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -54,6 +54,7 @@ enum class TxValidationResult {
     TX_MEMPOOL_POLICY,        //!< violated mempool's fee/size/descendant/RBF/etc limits
     TX_NO_MEMPOOL,            //!< this node does not have a mempool so can't validate the transaction
     TX_RECONSIDERABLE,        //!< fails some policy, but might be acceptable if submitted in a (different) package
+    TX_ALPHA_INCOMPATIBLE,     //!< more that one imput or two outputs
     TX_UNKNOWN,               //!< transaction was not validated because package failed
 };
 
