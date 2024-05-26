@@ -13,6 +13,8 @@
 #include <script/interpreter.h>
 #include <util/check.h>
 #include <util/moneystr.h>
+#include <logging.h>
+#include <logging/timer.h>
 
 bool IsFinalTx(const CTransaction &tx, int nBlockHeight, int64_t nBlockTime)
 {
@@ -168,10 +170,21 @@ int64_t GetTransactionSigOpCost(const CTransaction& tx, const CCoinsViewCache& i
 bool Consensus::CheckTxInputs(const CTransaction& tx, TxValidationState& state, const CCoinsViewCache& inputs, int nSpendHeight, CAmount& txfee)
 {
     // are the actual inputs available?
+    strprintf("Mikewashere");
     if (!inputs.HaveInputs(tx)) {
         return state.Invalid(TxValidationResult::TX_MISSING_INPUTS, "bad-txns-inputs-missingorspent",
                          strprintf("%s: inputs missing/spent", __func__));
     }
+
+    // Check for single input and two outputs
+        if (tx.vin.size() != 1 || tx.vout.size() !=2)
+        {
+            LogPrintf("ALPHA reached here vin : %i vout %i \n",tx.vin.size(), tx.vout.size());
+            
+                       return state.Invalid(TxValidationResult::TX_ALPHA_INCOMPATIBLE, "bad-txns-alpha-incompatible",
+                           strprintf("alpha incompatible"));
+            
+        }
 
     CAmount nValueIn = 0;
     for (unsigned int i = 0; i < tx.vin.size(); ++i) {
