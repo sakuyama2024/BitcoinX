@@ -20,6 +20,9 @@
 #include <wallet/spend.h>
 #include <wallet/wallet.h>
 
+#include <logging.h>
+#include <logging/timer.h>
+
 #include <univalue.h>
 
 
@@ -162,16 +165,36 @@ UniValue SendMoney(CWallet& wallet, const CCoinControl &coin_control, std::vecto
     if (wallet.IsWalletFlagSet(WALLET_FLAG_DISABLE_PRIVATE_KEYS)) {
         throw JSONRPCError(RPC_WALLET_ERROR, "Error: Private keys are disabled for this wallet");
     }
-
+    
+ //ALPHA
+  //  LogPrintf("Junko was here \n"),
     // Shuffle recipient list
     std::shuffle(recipients.begin(), recipients.end(), FastRandomContext());
 
     // Send
+    
+    
     auto res = CreateTransaction(wallet, recipients, /*change_pos=*/std::nullopt, coin_control, true);
     if (!res) {
         throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS, util::ErrorString(res).original);
     }
     const CTransactionRef& tx = res->tx;
+    
+    
+    // Print total number of inputs
+    int totalInputs = tx->vin.size();
+    LogPrintf("Total Inputs: %d\n", totalInputs);
+    
+    // Print total number of outputs
+    int totalOutputs = tx->vout.size();
+    LogPrintf("Total Outputs: %d\n", totalOutputs);
+    
+    if ((totalInputs != 1) || (totalOutputs !=2)){
+        throw JSONRPCError(RPC_WALLET_ERROR, "ALPHA INCOMPATIBLE MORE THAN ONE INPUT OR TWO OUTPUTS");
+    }
+    
+    
+    
     wallet.CommitTransaction(tx, std::move(map_value), /*orderForm=*/{});
     if (verbose) {
         UniValue entry(UniValue::VOBJ);
