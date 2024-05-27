@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Alphacash Core Security Policy
+    url: https://github.com/alphacash/alphacash/blob/master/SECURITY.md
+    about: View security policy
+  - name: Alphacash Core Developers
+    url: https://alphacashcore.org
+    about: Alphacash Core homepage

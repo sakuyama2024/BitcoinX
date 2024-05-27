@@ -1,0 +1,33 @@
+# /etc/conf.d/alphacashd: config file for /etc/init.d/alphacashd
+
+# Config file location
+#ALPHACASHD_CONFIGFILE="/etc/alphacash/alphacash.conf"
+
+# What directory to write pidfile to?  (created and owned by $ALPHACASHD_USER)
+#ALPHACASHD_PIDDIR="/var/run/alphacashd"
+
+# What filename to give the pidfile
+#ALPHACASHD_PIDFILE="${ALPHACASHD_PIDDIR}/alphacashd.pid"
+
+# Where to write alphacashd data (be mindful that the blockchain is large)
+#ALPHACASHD_DATADIR="/var/lib/alphacashd"
+
+# User and group to own alphacashd process
+#ALPHACASHD_USER="alphacash"
+#ALPHACASHD_GROUP="alphacash"
+
+# Path to alphacashd executable
+#ALPHACASHD_BIN="/usr/bin/alphacashd"
+
+# Nice value to run alphacashd under
+#ALPHACASHD_NICE=0
+
+# Additional options (avoid -conf and -datadir, use flags above)
+#ALPHACASHD_OPTS=""
+
+# The timeout in seconds OpenRC will wait for alphacashd to terminate
+# after a SIGTERM has been raised.
+# Note that this will be mapped as argument to start-stop-daemon's
+# '--retry' option, which means you can specify a retry schedule
+# here. For more information see man 8 start-stop-daemon.
+ALPHACASHD_SIGTERM_TIMEOUT=600
